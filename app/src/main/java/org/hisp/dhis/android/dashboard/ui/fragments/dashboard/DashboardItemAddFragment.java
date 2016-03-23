@@ -30,6 +30,7 @@ package org.hisp.dhis.android.dashboard.ui.fragments.dashboard;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -115,9 +116,18 @@ public class DashboardItemAddFragment extends BaseDialogFragment
                 R.style.Theme_AppCompat_Light_Dialog);
     }
 
+    /** Contribution from Devika Mehra
+     * https://github.com/devikamehra
+     * This method beside performing the basic operation of onCreateView would animate the view of
+     * this DialogFragment.
+     * R.style.dialogAnimation contains the style which defines animation for the entry and exit
+     * of DialogFragments
+     */
+    @NonNull
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.dialogAnimation;
         return inflater.inflate(R.layout.fragment_dialog_dashboard_item_add, container, false);
     }
 

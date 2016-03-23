@@ -1,5 +1,15 @@
 <resources>
 
+    <!-- Contribution from Devika Mehra
+     https://github.com/devikamehra
+    This style has been made to incorporate animation in the DialogFragments -->
+    <style name="dialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_top</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+        <item name="android:windowShowAnimation">@anim/fade_in</item>
+        <item name="android:windowHideAnimation">@anim/fade_out</item>"
+    </style>
+
     <style name="LightTheme" parent="Base.Theme.App" />
 
     <!-- Base application theme. -->

@@ -51,6 +51,7 @@ public class InterpretationCommentsActivity extends BaseActivity {
         setContentView(R.layout.activity_interpretation_comments);
         long interpretationId = getIntent().getExtras().getLong(INTERPRETATION_ID);
         getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_top, 0)
                 .replace(R.id.content_frame, InterpretationCommentsFragment
                         .newInstance(interpretationId))
                 .commit();

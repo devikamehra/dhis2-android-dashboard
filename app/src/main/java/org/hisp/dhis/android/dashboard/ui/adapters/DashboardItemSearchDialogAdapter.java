@@ -16,9 +16,12 @@
 
 package org.hisp.dhis.android.dashboard.ui.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -52,6 +55,7 @@ public class DashboardItemSearchDialogAdapter extends BaseAdapter implements Fil
 
     public DashboardItemSearchDialogAdapter(LayoutInflater inflater) {
         mInflater = inflater;
+        this.context = inflater.getContext();
         mObjects = new ArrayList<>();
     }
 
@@ -82,6 +86,15 @@ public class DashboardItemSearchDialogAdapter extends BaseAdapter implements Fil
     /**
      * {@inheritDoc}
      */
+    /**
+     *  This is to store the context of the calling activity
+     */
+    private Context context;
+
+    /**
+     * This is to keep track of the last position of the current view
+     */
+    private int lastPosition = -1;
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         return createViewFromResource(position, convertView, parent);
@@ -94,11 +107,31 @@ public class DashboardItemSearchDialogAdapter extends BaseAdapter implements Fil
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         return createViewFromResource(position, convertView, parent);
     }
+    /**
+     * Contribution by Devika Mehra
+     * https://github.com/devikamehra
+     * @param viewToAnimate view to be animated by the given set of animation
+     * @param position the position of the item to which animation has been applied
+     *
+     * The following method would apply animation to individual items in the list of items.
+     * Each item will fade and slide in from the left
+     *
+     */
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        if (position > lastPosition)
+        {
+            AnimationSet set = new AnimationSet(true);
+            set.addAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_in_left));
+            set.addAnimation(AnimationUtils.loadAnimation(context,R.anim.fade_in));
+            viewToAnimate.startAnimation(set);
+            lastPosition = position;
+        }
+    }
 
     private View createViewFromResource(int position, View convertView, ViewGroup parent) {
         View view;
         ViewHolder holder;
-
         if (convertView == null) {
             view = mInflater.inflate(
                     R.layout.fragment_dialog_dashboard_item_option, parent, false);
@@ -109,6 +142,7 @@ public class DashboardItemSearchDialogAdapter extends BaseAdapter implements Fil
             holder = (ViewHolder) view.getTag();
         }
 
+        setAnimation(holder.view, position);
         String item = getItem(position).label;
         holder.textView.setText(item);
 
@@ -166,8 +200,9 @@ public class DashboardItemSearchDialogAdapter extends BaseAdapter implements Fil
 
     private static class ViewHolder {
         public final TextView textView;
-
+        public View view;
         public ViewHolder(View view) {
+            this.view = view;
             textView = (TextView) view.findViewById(R.id.textview_item);
         }
     }

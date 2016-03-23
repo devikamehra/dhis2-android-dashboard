@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom Animation added by Devika Mehra
+    https://github.com/devikamehra-->
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <translate
+        android:fromXDelta="-70%p"
+        android:toXDelta="0"
+        android:duration="500"/>
+
+    <alpha
+        android:fromAlpha="0.0"
+        android:toAlpha="1.0"
+        android:duration="500" />
+
+</set>

@@ -33,6 +33,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -66,10 +68,21 @@ public final class InterpretationAdapter extends AbsAdapter<Interpretation, Inte
      */
     private final Picasso mImageLoader;
 
+    /**
+     *  This is to store the context of the calling activity
+     */
+    private Context context;
+
+    /**
+     * This is to keep track of the last position of the current view
+     */
+    private int lastPosition = -1;
+
     public InterpretationAdapter(Context context, LayoutInflater inflater,
                                  OnItemClickListener clickListener) {
         super(context, inflater);
 
+        this.context = context;
         mClickListener = clickListener;
         mImageLoader = PicassoProvider.getInstance(context);
     }
@@ -97,6 +110,38 @@ public final class InterpretationAdapter extends AbsAdapter<Interpretation, Inte
         System.out.println(getItem(position).getType());
 
         throw new IllegalArgumentException();
+    }
+
+    /**
+     * Contribution by Devika Mehra
+     * https://github.com/devikamehra
+     * @param viewToAnimate view to be animated by the given set of animation
+     * @param position the position of the item to which animation has been applied
+     *
+     * The following method would apply animation to individual items with every even item sliding in
+     * from the right and every odd item sliding in from the left. Each item additionally fades and
+     * slides in from the bottom.
+     *
+     */
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        if (position > lastPosition)
+        {
+            AnimationSet set = new AnimationSet(true);
+
+            if(position%2==0)
+
+                set.addAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_in_left));
+
+            else if(position%2==1)
+
+                set.addAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_in_right));
+
+            set.addAnimation(AnimationUtils.loadAnimation(context,R.anim.fade_in));
+            set.addAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom));
+            viewToAnimate.startAnimation(set);
+            lastPosition = position;
+        }
     }
 
     @Override
@@ -150,6 +195,8 @@ public final class InterpretationAdapter extends AbsAdapter<Interpretation, Inte
 
     @Override
     public void onBindViewHolder(InterpretationHolder holder, int position) {
+        setAnimation(holder.itemView, position);
+
         Interpretation interpretation = getItem(holder.getAdapterPosition());
 
         // handling menu visibility

@@ -73,10 +73,18 @@ public final class DashboardAddFragment extends BaseDialogFragment {
                 R.style.Theme_AppCompat_Light_Dialog);
     }
 
+    /** Contribution from Devika Mehra
+     * https://github.com/devikamehra
+     * This method beside performing the basic operation of onCreateView would animate the view of
+     * this DialogFragment.
+     * R.style.dialogAnimation contains the style which defines animation for the entry and exit
+     * of DialogFragments
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.dialogAnimation;
         return inflater.inflate(R.layout.fragment_dashboard_add, container, false);
     }
 

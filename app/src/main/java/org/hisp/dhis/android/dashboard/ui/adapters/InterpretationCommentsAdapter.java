@@ -33,6 +33,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import org.hisp.dhis.android.dashboard.R;
@@ -51,6 +53,15 @@ public final class InterpretationCommentsAdapter extends AbsAdapter<Interpretati
     private static final String EMPTY_FIELD = "";
 
     private final OnCommentClickListener mListener;
+    /**
+     *  This is to store the context of the calling activity
+     */
+    private Context context;
+
+    /**
+     * This is to keep track of the last position of the current view
+     */
+    private int lastPosition = -1;
 
     /* As API does not return Access objects for each interpretation comment,
     we can use information about current user as permission. If comment was left by
@@ -61,8 +72,30 @@ public final class InterpretationCommentsAdapter extends AbsAdapter<Interpretati
                                          OnCommentClickListener listener, User user) {
         super(context, inflater);
 
+        this.context = context;
         mListener = listener;
         mUser = user;
+    }
+    /**
+     * Contribution by Devika Mehra
+     * https://github.com/devikamehra
+     * @param viewToAnimate view to be animated by the given set of animation
+     * @param position the position of the item to which animation has been applied
+     *
+     * The following method would apply animation to individual comments that would appear
+     * in the list. Each comment will fade and slide in from the left.
+     *
+     */
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        if (position > lastPosition)
+        {
+            AnimationSet set = new AnimationSet(true);
+            set.addAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_in_left));
+            set.addAnimation(AnimationUtils.loadAnimation(context,R.anim.fade_in));
+            viewToAnimate.startAnimation(set);
+            lastPosition = position;
+        }
     }
 
     @Override
@@ -76,6 +109,7 @@ public final class InterpretationCommentsAdapter extends AbsAdapter<Interpretati
 
     @Override
     public void onBindViewHolder(CommentViewHolder holder, int position) {
+        setAnimation(holder.itemView, position);
         InterpretationComment comment = getItem(position);
         DateTime lastUpdated = comment.getLastUpdated();
         User user = comment.getUser();

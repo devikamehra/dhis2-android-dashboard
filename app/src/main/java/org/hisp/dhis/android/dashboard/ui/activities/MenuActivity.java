@@ -196,6 +196,7 @@ public class MenuActivity extends BaseActivity
 
     private void attachFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_top, 0)
                 .replace(R.id.content_frame, fragment)
                 .commit();
     }
